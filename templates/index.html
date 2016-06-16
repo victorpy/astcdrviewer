@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Index{% endblock %}
+
+{% load static %}
+{% load table_tags %}
+
+<link href="{% static 'static/cdrviewerapp/css/bootstrap.min.TTcss' %}" rel="stylesheet">
+<script src="{% static 'static/cdrviewerapp/js/jquery.min.js' %}"></script>
+<script src="{% static 'static/cdrviewerapp/js/bootstrap.min.js' %}"></script>
+
+
+{% block content %}
+
+<div class="container" style="margin-top: 10px">
+	    <h2>Usuario: {{username}}</h2>
+	    <h2>Email: {{email}} </h2>
+	    <h2>Extension: {{extension}} </h2>
+	    <h2>Saldo: {{credit}} Gs.</h2>
+            <br />
+	    <a  href="/rates" class="btn btn-primary btn-lg">Tarifas</a>
+	    <a  href="/payments" class="btn btn-primary btn-lg">Pagos</a>
+	    <a  href="/incalls" class="btn btn-primary btn-lg">Llamadas Entrantes</a>
+	    <a  href="/outcalls" class="btn btn-primary btn-lg">Llamadas Salientes</a>
+	    <a  href="/ratedcdrs" class="btn btn-primary btn-lg">Llamadas Facturadas</a>
+</div>
+
+{% endblock %}
+
+

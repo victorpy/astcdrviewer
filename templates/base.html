@@ -1,0 +1,26 @@
+<!DOCTYPE HTML PUBLIC .-//W3C//DTD HTML 4.01//EN.>
+<html lang="es">
+<head>
+<title>{% block title %}{% endblock %}</title>
+
+{% load static %}
+
+<link href="{% static 'cdrviewerapp/css/bootstrap.min.css' %}" rel="stylesheet">
+<script src="{% static 'cdrviewerapp/js/jquery.min.js' %}"></script>
+<script src="{% static 'cdrviewerapp/js/bootstrap.min.js' %}"></script>
+
+
+</head>
+<body>
+<h1>CDRViewer APP</h1>
+{% if user.is_authenticated %}
+<a  href="/index" class="btn btn-success btn-lg">Inicio</a>
+<a  href="/logout" class="btn btn-danger btn-lg">Cerrar Sesion</a>
+{% endif %}
+{% block content %}{% endblock %}
+{% block footer %}
+<hr>
+<p>CdrViewer - Todos los derechos reservados.</p>
+{% endblock %}
+</body>
+</html>

@@ -1,0 +1,11 @@
+*.egg-info
+*.pot
+*.py[co]
+__pycache__
+MANIFEST
+cdrviewer/settings.py
+manage.py
+db.sqlite3
+cron/ratecdr.php
+cron/test.php
+
