@@ -22,6 +22,7 @@ class PaymentsTable(Table):
     date = Column(field='date', header='Fecha')
     #accountcode = Column(field='accountcode', header='Acode')
     amount = Column(field='amount', header='Monto')
+    comments = Column(field='comments', header='Descripcion')
     class Meta:
         model = Payments
 

@@ -118,6 +118,7 @@ class Payments(models.Model):
     date = models.DateTimeField()
     id_account = models.IntegerField()
     amount = models.FloatField()
+    comments = models.CharField(max_length=64, blank=True, null=True)
 
     def __str__(self):
         return str(self.id_payment)
