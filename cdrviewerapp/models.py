@@ -131,6 +131,7 @@ class Payments(models.Model):
 class Rate(models.Model):
     id_rate = models.AutoField(primary_key=True)
     id_rate_group = models.IntegerField()
+    prefix = models.CharField(max_length=4, blank=True, null=True)
     destination = models.CharField(max_length=64)
     description = models.CharField(max_length=64, blank=True, null=True)
     amount1 = models.FloatField()

@@ -106,8 +106,9 @@ def ratedcdrs(request):
                 return render(request, 'accounterror.html')
 
         accountcode = account.account_code
+	extension = account.extension
 
-        ratedcdrs = RatedCdrTable(RatedCdr.objects.filter(accountcode = accountcode).order_by('-calldate'))
+        ratedcdrs = RatedCdrTable(RatedCdr.objects.filter(accountcode = accountcode).order_by('-calldate') | RatedCdr.objects.filter(dst = extension).order_by('-calldate')) 
         return render(request,'ratedcdrs.html',{'ratedcdrs': ratedcdrs});
 
 

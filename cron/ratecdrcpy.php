@@ -1,11 +1,11 @@
 <?php
 // Conectando, seleccionando la base de datos
-$conn = mysql_connect('localhost', 'root', 'password')
+$conn = mysql_connect('localhost', 'root', '0m1cr0n')
     or die('No se pudo conectar: ' . mysql_error());
-echo 'Connected successfully';
+echo 'Connected successfully'."\n";
 mysql_select_db('asteriskcdrdb') or die('Cannot select DB');
 
-$query = "SELECT * FROM cdrtmp where  israted = 0 and disposition = 'ANSWERED' AND accountcode != ''";
+$query = "SELECT * FROM cdrtmp where  israted = 0 and disposition = 'ANSWERED' AND accountcode != '' AND billsec >= 1";
 $result = mysql_query($query) or die('Query Error: ' . mysql_error());
 
 //extract cdr from answered calls
@@ -28,7 +28,7 @@ while ($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
 
     $row_rsttmpqry1= mysql_fetch_array($rst_tmpqry1, MYSQL_ASSOC);
 
-    $prefix = $row_rsttmpqry1['prefix'];
+    //$prefix = $row_rsttmpqry1['prefix'];
     $extension = $row_rsttmpqry1['extension'];
 
     //find rates with rate_group
@@ -43,16 +43,29 @@ while ($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
      
     //search rate for cdr dst
     //remove prefix
-    $cdrdst = substr_replace($cdrdst, "", 0, strlen($prefix));
+    //$cdrdst = substr_replace($cdrdst, "", 0, strlen($prefix));
 
     $ratefound = 0;
 
     while($raterow = mysql_fetch_array($rst_ratesqry, MYSQL_ASSOC)){
 
+	$prefix = $raterow['prefix'];
+	//copy destination to  $cdrdsttmp
+	$cdrdsttmp = $cdrdst;
+
+	//if prefix is not empty
+	if($prefix != ''){ 
+		//echo "prefix is not empty x".$prefix."x \n";
+		//remove prefix in $cdrdsttmp
+		$cdrdsttmp = substr_replace($cdrdsttmp, "", 0, strlen($prefix));
+	}
+
         $ratedst = $raterow['destination'];
+	//search from start in  $cdrdsttmp  if rate destination is contained
+        $tmpstr = substr($cdrdsttmp, 0, strlen($ratedst));
 
-        $tmpstr = substr($cdrdst, 0, strlen($ratedst));
-
+	//if contained $tmpstr will be equal to $ratedst
+	//then set rate as found and copy the rates amount and cadence
         if($tmpstr == $ratedst){ 
 		echo "rate found\n";
 		$ratefound = 1;
@@ -71,19 +84,25 @@ while ($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
     }
 
     //calculate call amount
-    if($billsec > $cad1){
-      	$t1 = $billsec - $cad1;
-      	$amount = $amount1;
-      
-      	if($t1 > $cad2){
-		$slicest1 = ceil($t1/$cad2);
-		$amount = $amount + ($slicest1 * $amount2);
-	} else {
-		$amount = $amount + $amount2;
-	}
 
-    } else {
+    //one time rate
+    if($cad1==1 && $cad2==0) {
 	$amount = $amount1;
+    } else {
+	if($billsec > $cad1){
+      		$t1 = $billsec - $cad1;
+      		$amount = $amount1;
+      
+      		if($t1 > $cad2){
+			$slicest1 = ceil($t1/$cad2);
+			$amount = $amount + ($slicest1 * $amount2);
+		} else {
+			$amount = $amount + $amount2;
+		}
+
+    	} else {
+		$amount = $amount1;
+    	}
     }
     
 	//echo "the amount is ".$amount." the time is ".$billsec."\n";

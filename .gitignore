@@ -8,4 +8,4 @@ manage.py
 db.sqlite3
 cron/ratecdr.php
 cron/test.php
-
+cron/rateincomingcdr.php

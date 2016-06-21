@@ -29,7 +29,11 @@ class PaymentsTable(Table):
 class RateTable(Table):
     destination = Column(field='destination', header='Destino')
     description = Column(field='description', header='Descripcion')
-    amount = Column(field='amount', header='Monto')
+    amount1 = Column(field='amount1', header='Costo Inicial')
+    cadence1 = Column(field='cadence1', header='Cadencia1(seg.)')
+    amount2 = Column(field='amount2', header='Costo Siguientes')
+    cadence2 = Column(field='cadence2', header='Cadencia2(seg.)')
+
     class Meta:
         model = Rate
 
