@@ -31,7 +31,7 @@ CREATE TABLE `accounts` (
   `id_rate_group` int(11) NOT NULL,
   `prefix` varchar(4) NOT NULL,
   PRIMARY KEY (`id_account`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -106,7 +106,7 @@ CREATE TABLE `auth_user` (
   `date_joined` datetime NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -182,7 +182,7 @@ CREATE TABLE `cdr` (
   KEY `dst` (`dst`),
   KEY `accountcode` (`accountcode`),
   KEY `uniqueid` (`uniqueid`)
-) ENGINE=MyISAM AUTO_INCREMENT=1319424 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=1319539 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -253,7 +253,7 @@ CREATE TABLE `cdrtmp` (
   KEY `dst` (`dst`),
   KEY `accountcode` (`accountcode`),
   KEY `uniqueid` (`uniqueid`)
-) ENGINE=MyISAM AUTO_INCREMENT=1319424 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=1319539 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -292,7 +292,7 @@ CREATE TABLE `cel` (
   PRIMARY KEY (`id`),
   KEY `uniqueid_index` (`uniqueid`),
   KEY `linkedid_index` (`linkedid`)
-) ENGINE=MyISAM AUTO_INCREMENT=9727424 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=9728693 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -314,7 +314,7 @@ CREATE TABLE `django_admin_log` (
   PRIMARY KEY (`id`),
   KEY `django_admin_log_417f1b1c` (`content_type_id`),
   KEY `django_admin_log_e8701ad4` (`user_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=17 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=36 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -330,7 +330,7 @@ CREATE TABLE `django_content_type` (
   `model` varchar(100) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `django_content_type_app_label_76bd3d3b_uniq` (`app_label`,`model`)
-) ENGINE=MyISAM AUTO_INCREMENT=15 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=16 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -394,9 +394,48 @@ CREATE TABLE `payments` (
   `date` datetime NOT NULL,
   `id_account` int(11) NOT NULL,
   `amount` double NOT NULL DEFAULT '0',
+  `comments` varchar(64) DEFAULT NULL,
   PRIMARY KEY (`id_payment`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = '' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `add_payment` AFTER INSERT ON `payments` FOR EACH ROW BEGIN
+
+UPDATE accounts SET credit = credit + new.amount WHERE id_account = new.id_account;
+
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = '' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `del_payment` AFTER DELETE ON `payments` FOR EACH ROW BEGIN
+
+UPDATE accounts SET credit = credit - old.amount WHERE id_account = old.id_account;
+
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 
 --
 -- Table structure for table `rate`
@@ -408,6 +447,7 @@ DROP TABLE IF EXISTS `rate`;
 CREATE TABLE `rate` (
   `id_rate` int(11) NOT NULL AUTO_INCREMENT,
   `id_rate_group` int(11) NOT NULL,
+  `prefix` varchar(4) DEFAULT NULL,
   `destination` varchar(64) NOT NULL,
   `description` varchar(64) DEFAULT NULL,
   `amount1` double NOT NULL,
@@ -415,7 +455,7 @@ CREATE TABLE `rate` (
   `cadence2` int(11) NOT NULL,
   `amount2` double NOT NULL,
   PRIMARY KEY (`id_rate`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -448,7 +488,7 @@ CREATE TABLE `rated_cdr` (
   `accountcode` int(11) NOT NULL,
   `billsec` int(11) NOT NULL,
   PRIMARY KEY (`id_rated_cdr`)
-) ENGINE=InnoDB AUTO_INCREMENT=178 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=261 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -476,4 +516,4 @@ CREATE TABLE `trunks_accountcodes` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-06-16 14:21:15
+-- Dump completed on 2016-06-21 15:10:54
