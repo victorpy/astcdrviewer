@@ -12,8 +12,12 @@ class CdrAdmin(admin.ModelAdmin):
 class RatedCdrAdmin(admin.ModelAdmin):
 	list_display = ('calldate','clid','dst', 'accountcode')
 
+class AccountsAdmin(admin.ModelAdmin):
+        list_display = ('account_code','username','credit')
+
+
 admin.site.register(Cdr,CdrAdmin)
-admin.site.register(Accounts)
+admin.site.register(Accounts, AccountsAdmin)
 admin.site.register(Payments)
 admin.site.register(RateGroup)
 admin.site.register(Rate)
